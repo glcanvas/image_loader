@@ -35,7 +35,7 @@ class AsyncLoadList(
         list.addAll(result ?: emptyList())
         adapter.notifyDataSetChanged()
         result?.forEachIndexed { index, element ->
-            AsyncLoadPreviewImage(index + listOffset, imageSet, list, adapter).execute(element.previewLink)
+            AsyncLoadPreviewImage(listOffset + index, imageSet, element, adapter).execute(element.previewLink)
         }
     }
 

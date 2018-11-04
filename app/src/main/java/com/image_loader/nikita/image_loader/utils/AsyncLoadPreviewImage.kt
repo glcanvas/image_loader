@@ -12,7 +12,7 @@ import java.io.IOException
 class AsyncLoadPreviewImage(
     private val position: Int,
     private val set: HashSet<AsyncLoadPreviewImage>,
-    private val list: ArrayList<ShortImageModel>,
+    private val element: ShortImageModel,
     private val adapter: ImageListViewAdapter
 ) :
     AsyncTask<String, Unit, Bitmap>() {
@@ -27,7 +27,7 @@ class AsyncLoadPreviewImage(
     override fun onPostExecute(result: Bitmap?) {
         set.remove(this)
         try {
-            list[position].previewImage = result
+            element.previewImage = result
             adapter.notifyItemChanged(position)
         } catch (e: IndexOutOfBoundsException) {
             Log.e("image_loader", e.toString())
@@ -38,7 +38,7 @@ class AsyncLoadPreviewImage(
     override fun doInBackground(vararg params: String?): Bitmap {
         val stringUrl = params[0]
         val imageUrl = URL(stringUrl)
-        if(isCancelled) {
+        if (isCancelled) {
             return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
         }
         try {

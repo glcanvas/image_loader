@@ -35,15 +35,19 @@ class MainActivity : AppCompatActivity() {
         bundle.putString("screen_size", screenSize)
         when (screenSize) {
             "normal" -> {
-                val fragment = savedInstanceState?.getString("active_fragment")
-                val currentFragment: Fragment
-                when (fragment) {
-                    "detail" -> currentFragment = DetailFragment()
-                    else -> currentFragment = ImageListFragment()
+                if (fragmentManager.fragments.size == 0) {
+
+
+                    val fragment = savedInstanceState?.getString("active_fragment")
+                    val currentFragment: Fragment
+                    when (fragment) {
+                        "detail" -> currentFragment = DetailFragment()
+                        else -> currentFragment = ImageListFragment()
+                    }
+                    bundle.putAll(savedInstanceState ?: Bundle())
+                    currentFragment.arguments = bundle
+                    fragmentManager.beginTransaction().replace(R.id.listholder, currentFragment).commit()
                 }
-                bundle.putAll(savedInstanceState ?: Bundle())
-                currentFragment.arguments = bundle
-                fragmentManager.beginTransaction().replace(R.id.listholder, currentFragment).commit()
             }
             "large" -> {
                 val listFragment = ImageListFragment()

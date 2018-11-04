@@ -94,15 +94,6 @@ class ImageListFragment : Fragment() {
         outState.putInt("offset", offset)
     }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        /* val tmpArray =
-             savedInstanceState?.getParcelableArrayList("list_images") ?: listOf<ShortImageModel>()
-         offset = savedInstanceState?.getInt("offset") ?: offset
-         metaImages.addAll(tmpArray)
-         adapter.notifyDataSetChanged()*/
-        //onCreate(savedInstanceState)
-    }
 
     interface OnItemClickListener {
         fun onItemClicked(position: Int, view: View)

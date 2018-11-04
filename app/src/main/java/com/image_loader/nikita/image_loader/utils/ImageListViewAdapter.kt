@@ -2,6 +2,7 @@ package com.image_loader.nikita.image_loader.utils
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,11 @@ open class ImageListViewAdapter(
         val img = items[p1]
         p0.author_name.text = img.authorName
         p0.description.text = img.description
+        if (img.previewImage != null) {
+            p0.previewImage.setImageBitmap(img.previewImage)
+            p0.previewImage.visibility = View.VISIBLE
+            p0.progressBar.visibility = View.GONE
+        }
     }
 
 

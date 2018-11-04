@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import com.image_loader.nikita.image_loader.utils.AsyncLoadList
+import com.image_loader.nikita.image_loader.utils.AsyncLoadPreviewImage
 import com.image_loader.nikita.image_loader.utils.ImageListViewAdapter
 import com.image_loader.nikita.image_loader.utils.ShortImageModel
 import java.util.*
@@ -20,12 +21,16 @@ import kotlin.collections.HashSet
 
 class ImageListFragment : Fragment() {
     private val metaImages = ArrayList<ShortImageModel>()
+
     private val taskSet = HashSet<AsyncLoadList>()
+    private val previewImageSet = HashSet<AsyncLoadPreviewImage>()
+
     private var screenSize: String? = null
-    private var offset: Int = 0
+    private var offset: Int = 1
     private lateinit var adapter: ImageListViewAdapter
 
-
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var button: Button
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Log.d("tested", "list fragment createView")
 
@@ -34,16 +39,17 @@ class ImageListFragment : Fragment() {
 
         screenSize = bundle?.getString("screen_size") ?: screenSize
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.image_list)
-        recyclerView.layoutManager = LinearLayoutManager(context, LinearLayout.VERTICAL, false)
+        recyclerView = view.findViewById(R.id.image_list)
+        //recyclerView.layoutManager = LinearLayoutManager(context, LinearLayout.VERTICAL, false)
         adapter = ImageListViewAdapter(metaImages)
         recyclerView.adapter = adapter
 
-        val button = view.findViewById(R.id.switch_frame) as Button
+
+        button = view.findViewById(R.id.switch_frame)
         button.setOnClickListener {
-            val async = AsyncLoadList(offset, adapter, metaImages, taskSet)
+            val async = AsyncLoadList(offset, adapter, metaImages, taskSet, previewImageSet)
             async.execute("https://api.unsplash.com/photos/?client_id=73e14423b06e6a0f7715e4ea90b0c9b8f3e94fa21d6281ed2b730da4cb79d016")
-            offset
+            offset++
         }
         return view
     }
@@ -64,7 +70,6 @@ class ImageListFragment : Fragment() {
             fragmentManager?.beginTransaction()?.replace(R.id.listholder, detailFragment)?.addToBackStack(null)
                 ?.commit()
         } else {
-
         }
     }*/
 }

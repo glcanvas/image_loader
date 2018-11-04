@@ -12,10 +12,11 @@ import java.lang.StringBuilder
 import java.net.URL
 
 class AsyncLoadList(
-    val offset: Int,
-    val adapter: ImageListViewAdapter,
-    val list: ArrayList<ShortImageModel>,
-    val set: HashSet<AsyncLoadList>
+    offset: Int,
+    private val adapter: ImageListViewAdapter,
+    private val list: ArrayList<ShortImageModel>,
+    private val set: HashSet<AsyncLoadList>,
+    private val imageSet: HashSet<AsyncLoadPreviewImage>
 ) :
     AsyncTask<String, Unit, ArrayList<ShortImageModel>>() {
     var tmpOffset: Int = 0
@@ -30,11 +31,15 @@ class AsyncLoadList(
 
     override fun onPostExecute(result: ArrayList<ShortImageModel>?) {
         set.remove(this)
+        val listOffset = list.size
         list.addAll(result ?: emptyList())
         adapter.notifyDataSetChanged()
+        result?.forEachIndexed { index, element ->
+            AsyncLoadPreviewImage(index + listOffset, imageSet, list, adapter).execute(element.previewLink)
+        }
     }
 
-    override fun onCancelled() {
+    override fun onCancelled(result: ArrayList<ShortImageModel>?) {
         set.remove(this)
     }
 
@@ -91,7 +96,9 @@ class AsyncLoadList(
             authorName = authorName,
             description = description,
             fullLink = fullLink,
-            previewLink = previewLink
+            previewLink = previewLink,
+            fullImage = null,
+            previewImage = null
         )
 
     }

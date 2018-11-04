@@ -2,6 +2,7 @@ package com.image_loader.nikita.image_loader
 
 
 import android.os.Bundle
+import android.support.annotation.ArrayRes
 import android.support.v4.app.Fragment
 
 import android.support.v7.widget.LinearLayoutManager
@@ -17,6 +18,7 @@ import com.image_loader.nikita.image_loader.utils.AsyncLoadPreviewImage
 import com.image_loader.nikita.image_loader.utils.ImageListViewAdapter
 import com.image_loader.nikita.image_loader.utils.ShortImageModel
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
 
 class ImageListFragment : Fragment() {
@@ -36,11 +38,17 @@ class ImageListFragment : Fragment() {
         val view = inflater.inflate(R.layout.image_list_view, container, false)
 
         screenSize = bundle.getString("screen_size") ?: screenSize
-
         recyclerView = view.findViewById(R.id.image_list)
         adapter = ImageListViewAdapter(metaImages)
         recyclerView.adapter = adapter
 
+        offset = bundle.getInt("offset") ?: 1
+        bundle.putAll(savedInstanceState ?: Bundle())
+        val tmpArray =
+            bundle.getParcelableArrayList("list_images") ?: listOf<ShortImageModel>()
+        offset = bundle.getInt("offset") ?: offset
+        metaImages.addAll(tmpArray)
+        adapter.notifyDataSetChanged()
 
         button = view.findViewById(R.id.switch_frame)
         button.setOnClickListener {
@@ -56,7 +64,8 @@ class ImageListFragment : Fragment() {
                     bundle.putInt("list_offset", offset)
                     bundle.putString("full_url", metaImages[position].fullLink)
                     currentFragment.arguments = bundle
-                    fragmentManager?.beginTransaction()?.replace(R.id.listholder, currentFragment)?.addToBackStack(null)?.commit()
+                    fragmentManager?.beginTransaction()?.replace(R.id.listholder, currentFragment)?.addToBackStack(null)
+                        ?.commit()
                 } else {
                     val currentFragment = DetailFragment()
                     bundle.putString("full_url", metaImages[position].fullLink)
@@ -69,19 +78,30 @@ class ImageListFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.e("!!ghjsd!!!", "destoy")
-        for(i in taskSet) {
+        for (i in taskSet) {
             i.cancel(true)
         }
-        for(i in previewImageSet) {
+        for (i in previewImageSet) {
             i.cancel(true)
         }
         taskSet.clear()
         previewImageSet.clear()
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        //outState.putString("screen_size", screenSize)
+        outState.putParcelableArrayList("list_images", metaImages)
+        outState.putInt("offset", offset)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        /* val tmpArray =
+             savedInstanceState?.getParcelableArrayList("list_images") ?: listOf<ShortImageModel>()
+         offset = savedInstanceState?.getInt("offset") ?: offset
+         metaImages.addAll(tmpArray)
+         adapter.notifyDataSetChanged()*/
+        //onCreate(savedInstanceState)
     }
 
     interface OnItemClickListener {

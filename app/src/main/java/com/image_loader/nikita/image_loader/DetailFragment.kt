@@ -15,16 +15,14 @@ class DetailFragment : Fragment() {
         val view = inflater.inflate(R.layout.image_detail_view, container, false)
         val bundle = this.arguments
         //val t = detailsText
-        val pos = bundle?.getLong("position")
-        val detailsText = view.findViewById<TextView>(R.id.detailsText)
-        detailsText.text = pos.toString()
-        Log.d("test", "cv")
+        //val pos = bundle?.getLong("position")
+        //val detailsText = view.findViewById<TextView>(R.id.detailsImage)
+
         return view
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d("text", "oc")
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
     }
 
 }

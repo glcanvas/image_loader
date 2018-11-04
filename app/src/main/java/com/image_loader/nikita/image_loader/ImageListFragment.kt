@@ -32,15 +32,12 @@ class ImageListFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var button: Button
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.d("tested", "list fragment createView")
-
-        val bundle = this.arguments
+        val bundle = this.arguments ?: Bundle()
         val view = inflater.inflate(R.layout.image_list_view, container, false)
 
-        screenSize = bundle?.getString("screen_size") ?: screenSize
+        screenSize = bundle.getString("screen_size") ?: screenSize
 
         recyclerView = view.findViewById(R.id.image_list)
-        //recyclerView.layoutManager = LinearLayoutManager(context, LinearLayout.VERTICAL, false)
         adapter = ImageListViewAdapter(metaImages)
         recyclerView.adapter = adapter
 
@@ -51,25 +48,59 @@ class ImageListFragment : Fragment() {
             async.execute("https://api.unsplash.com/photos/?client_id=73e14423b06e6a0f7715e4ea90b0c9b8f3e94fa21d6281ed2b730da4cb79d016")
             offset++
         }
+
+        recyclerView.addOnItemClickListener(object : OnItemClickListener {
+            override fun onItemClicked(position: Int, view: View) {
+                if (screenSize == "normal") {
+                    val currentFragment = DetailFragment()
+                    bundle.putInt("list_offset", offset)
+                    bundle.putString("full_url", metaImages[position].fullLink)
+                    currentFragment.arguments = bundle
+                    fragmentManager?.beginTransaction()?.replace(R.id.listholder, currentFragment)?.addToBackStack(null)?.commit()
+                } else {
+                    val currentFragment = DetailFragment()
+                    bundle.putString("full_url", metaImages[position].fullLink)
+                    fragmentManager?.beginTransaction()?.replace(R.id.detailholder, currentFragment)?.commit()
+                }
+            }
+        })
         return view
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.e("!!ghjsd!!!", "destoy")
+        for(i in taskSet) {
+            i.cancel(true)
+        }
+        for(i in previewImageSet) {
+            i.cancel(true)
+        }
+        taskSet.clear()
+        previewImageSet.clear()
+    }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("screen_size", screenSize)
+        //outState.putString("screen_size", screenSize)
     }
-    /*
-    override fun onListItemClick(l: ListView?, v: View?, position: Int, id: Long) {
-        super.onListItemClick(l, v, position, id)
-        val bundle = Bundle()
-        bundle.putString("screen_size", screenSize)
-        bundle.putLong("position", id)
-        if (screenSize == "normal") {
-            val detailFragment = DetailFragment()
-            detailFragment.arguments = bundle
-            fragmentManager?.beginTransaction()?.replace(R.id.listholder, detailFragment)?.addToBackStack(null)
-                ?.commit()
-        } else {
-        }
-    }*/
+
+    interface OnItemClickListener {
+        fun onItemClicked(position: Int, view: View)
+    }
+
+    fun RecyclerView.addOnItemClickListener(onClickListener: OnItemClickListener) {
+        this.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
+            override fun onChildViewDetachedFromWindow(view: View) {
+                view.setOnClickListener(null)
+            }
+
+            override fun onChildViewAttachedToWindow(view: View) {
+                view.setOnClickListener {
+                    val holder = getChildViewHolder(view)
+                    onClickListener.onItemClicked(holder.adapterPosition, view)
+                }
+            }
+        })
+
+    }
 }

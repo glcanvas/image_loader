@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.util.Log
 
@@ -11,7 +12,7 @@ import android.util.Log
 class MainActivity : AppCompatActivity() {
 
     lateinit var fragmentManager: FragmentManager
-
+    lateinit var screenSize: String
 
     fun getDimension(context: Context): String {
         val screenLayout = context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
@@ -23,24 +24,33 @@ class MainActivity : AppCompatActivity() {
             else -> "undefined"
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("tested", "activity create")
+
         setContentView(R.layout.activity_main)
         fragmentManager = supportFragmentManager
-        val screenSize = getDimension(baseContext)
+        screenSize = getDimension(baseContext)
         val bundle = Bundle()
         bundle.putString("screen_size", screenSize)
         when (screenSize) {
             "normal" -> {
-                val listFragment = ImageListFragment()
-                listFragment.arguments = bundle
-                fragmentManager.beginTransaction().replace(R.id.listholder, listFragment).commit()
+                val fragment = savedInstanceState?.getString("active_fragment")
+                val currentFragment: Fragment
+                when (fragment) {
+                    "detail" -> currentFragment = DetailFragment()
+                    else -> currentFragment = ImageListFragment()
+                }
+                bundle.putAll(savedInstanceState ?: Bundle())
+                currentFragment.arguments = bundle
+                fragmentManager.beginTransaction().replace(R.id.listholder, currentFragment).commit()
             }
             "large" -> {
                 val listFragment = ImageListFragment()
                 val detailFragment = DetailFragment()
+                bundle.putAll(savedInstanceState ?: Bundle())
                 listFragment.arguments = bundle
+                detailFragment.arguments = bundle
                 fragmentManager.beginTransaction().replace(R.id.listholder, listFragment).commit()
                 fragmentManager.beginTransaction().replace(R.id.detailholder, detailFragment).commit()
             }
@@ -51,28 +61,16 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d("tested", "activity start")
-    }
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putString("screen_size", screenSize)
+        if (screenSize == "normal") {
+            if (supportFragmentManager.findFragmentById(R.id.listholder) is ImageListFragment) {
+                outState?.putString("active_fragment", "list")
+            } else {
+                outState?.putString("active_fragment", "detail")
+            }
+        }
 
-    override fun onResume() {
-        super.onResume()
-        Log.d("tested", "activity resume")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d("tested", "activity pause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("tested", "activity stop")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("tested", "activity destroy")
     }
 }

@@ -8,7 +8,7 @@
 
     <Button android:layout_width="169dp"
             android:layout_height="wrap_content"
-            android:id="@+id/switch_frame"/>
+            android:id="@+id/switch_frame" android:text="load"/>
     <android.support.v7.widget.RecyclerView
             android:id="@+id/image_list"
             android:layout_width="wrap_content"

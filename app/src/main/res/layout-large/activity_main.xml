@@ -8,12 +8,12 @@
 
     <FrameLayout
             android:id="@+id/listholder"
-            android:layout_width="164dp"
-            android:layout_height="497dp">
+            android:layout_width="231dp"
+            android:layout_height="match_parent">
     </FrameLayout>
     <FrameLayout
             android:id="@+id/detailholder"
             android:layout_width="match_parent"
-            android:layout_height="497dp">
+            android:layout_height="match_parent">
     </FrameLayout>
 </LinearLayout>

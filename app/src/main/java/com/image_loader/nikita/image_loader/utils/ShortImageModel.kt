@@ -28,6 +28,8 @@ data class ShortImageModel(
         parcel.writeString(description)
         parcel.writeString(fullLink)
         parcel.writeString(previewLink)
+        parcel.writeValue(null)
+        parcel.writeValue(null)
     }
 
     override fun describeContents(): Int {

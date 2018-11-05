@@ -2,6 +2,7 @@ package com.image_loader.nikita.image_loader
 
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.annotation.ArrayRes
 import android.support.v4.app.Fragment
 
@@ -46,9 +47,13 @@ class ImageListFragment : Fragment() {
         bundle.putAll(savedInstanceState ?: Bundle())
         val tmpArray =
             bundle.getParcelableArrayList("list_images") ?: listOf<ShortImageModel>()
-        offset = bundle.getInt("offset") ?: offset
         metaImages.addAll(tmpArray)
         adapter.notifyDataSetChanged()
+        metaImages.forEachIndexed { index, item ->
+            AsyncLoadPreviewImage(index, previewImageSet, item, adapter).execute(
+                item.previewLink
+            )
+        }
 
         button = view.findViewById(R.id.switch_frame)
         button.setOnClickListener {
@@ -59,16 +64,14 @@ class ImageListFragment : Fragment() {
 
         recyclerView.addOnItemClickListener(object : OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
+                bundle.putInt("list_offset", offset)
+                bundle.putString("full_url", metaImages[position].fullLink)
+                val currentFragment = DetailFragment()
+                currentFragment.arguments = bundle
                 if (screenSize == "normal") {
-                    val currentFragment = DetailFragment()
-                    bundle.putInt("list_offset", offset)
-                    bundle.putString("full_url", metaImages[position].fullLink)
-                    currentFragment.arguments = bundle
                     fragmentManager?.beginTransaction()?.replace(R.id.listholder, currentFragment)?.addToBackStack(null)
                         ?.commit()
                 } else {
-                    val currentFragment = DetailFragment()
-                    bundle.putString("full_url", metaImages[position].fullLink)
                     fragmentManager?.beginTransaction()?.replace(R.id.detailholder, currentFragment)?.commit()
                 }
             }
@@ -90,7 +93,17 @@ class ImageListFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList("list_images", metaImages)
+        val tmp = metaImages.map { x ->
+            ShortImageModel(
+                authorName = x.authorName,
+                description = x.description,
+                previewLink = x.previewLink,
+                fullLink = x.fullLink,
+                previewImage = null,
+                fullImage = null
+            )
+        } as ArrayList<ShortImageModel>
+        outState.putParcelableArrayList("list_images", tmp)
         outState.putInt("offset", offset)
     }
 

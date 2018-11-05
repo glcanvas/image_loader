@@ -49,13 +49,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             "large" -> {
-                val listFragment = ImageListFragment()
-                val detailFragment = DetailFragment()
-                bundle.putAll(savedInstanceState ?: Bundle())
-                listFragment.arguments = bundle
-                detailFragment.arguments = bundle
-                fragmentManager.beginTransaction().replace(R.id.listholder, listFragment).commit()
-                fragmentManager.beginTransaction().replace(R.id.detailholder, detailFragment).commit()
+                if (fragmentManager.fragments.size == 0) {
+                    val listFragment = ImageListFragment()
+                    val detailFragment = DetailFragment()
+                    bundle.putAll(savedInstanceState ?: Bundle())
+                    listFragment.arguments = bundle
+                    detailFragment.arguments = bundle
+                    fragmentManager.beginTransaction().replace(R.id.listholder, listFragment).commit()
+                    fragmentManager.beginTransaction().replace(R.id.detailholder, detailFragment).commit()
+                }
             }
             else -> {
                 throw Error()

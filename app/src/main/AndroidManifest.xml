@@ -18,6 +18,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <service android:name=".utils.BackgroundImageLoad"></service>
+        <service android:name=".services.BackgroundImageLoad"></service>
     </application>
 </manifest>

@@ -4,11 +4,18 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.AsyncTask
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import java.io.IOException
+import java.lang.ref.WeakReference
 import java.net.URL
 
-class AsyncLoadFull(private val imageView: ImageView) : AsyncTask<String, Unit, Bitmap>() {
+class AsyncLoadFull(
+    private val imageView: WeakReference<ImageView>,
+    private val progressBar: WeakReference<ProgressBar>
+) :
+    AsyncTask<String, Unit, Bitmap>() {
     override fun doInBackground(vararg params: String?): Bitmap {
         val stringUrl = params[0]
         val imageUrl = URL(stringUrl)
@@ -16,8 +23,9 @@ class AsyncLoadFull(private val imageView: ImageView) : AsyncTask<String, Unit, 
             return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
         }
         try {
-            return BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream())
-            //bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bitmap.)
+            val inputStream = imageUrl.openConnection().getInputStream()
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+            return Bitmap.createScaledBitmap(bitmap, 512, 512, false)
         } catch (e: IOException) {
             Log.e("image_loader", e.toString())
         } catch (e: IllegalArgumentException) {
@@ -27,6 +35,7 @@ class AsyncLoadFull(private val imageView: ImageView) : AsyncTask<String, Unit, 
     }
 
     override fun onPostExecute(result: Bitmap?) {
-        imageView.setImageBitmap(result)
+        progressBar.get()?.visibility = View.GONE
+        imageView.get()?.setImageBitmap(result)
     }
 }

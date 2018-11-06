@@ -58,15 +58,6 @@ class DetailFragment : Fragment() {
         }
         return view
     }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onPause() {
-        super.onPause()
-    }
-
     override fun onDestroy() {
         context?.unregisterReceiver(broadcastReceiver)
         super.onDestroy()

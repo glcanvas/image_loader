@@ -2,7 +2,6 @@ package com.image_loader.nikita.image_loader.services
 
 import android.app.IntentService
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

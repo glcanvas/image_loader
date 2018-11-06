@@ -2,23 +2,17 @@ package com.image_loader.nikita.image_loader
 
 
 import android.os.Bundle
-import android.os.Parcelable
-import android.support.annotation.ArrayRes
 import android.support.v4.app.Fragment
 
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
 import com.image_loader.nikita.image_loader.utils.AsyncLoadList
 import com.image_loader.nikita.image_loader.utils.AsyncLoadPreviewImage
 import com.image_loader.nikita.image_loader.utils.ImageListViewAdapter
 import com.image_loader.nikita.image_loader.utils.ShortImageModel
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
 

@@ -1,11 +1,10 @@
-package com.image_loader.nikita.image_loader.utils
+package com.imageLoader.nikita.imageLoader.utils
 
 import android.graphics.Bitmap
 import android.os.AsyncTask
 import android.util.Log
 import java.net.URL
 import android.graphics.BitmapFactory
-import com.image_loader.nikita.image_loader.R
 import java.io.IOException
 
 

@@ -1,4 +1,4 @@
-package com.image_loader.nikita.image_loader
+package com.imageLoader.nikita.imageLoader
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -12,7 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
-import com.image_loader.nikita.image_loader.services.BackgroundImageLoad
+import com.imageLoader.nikita.imageLoader.services.BackgroundImageLoad
 
 class DetailFragment : Fragment() {
     companion object {

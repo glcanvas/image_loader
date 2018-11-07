@@ -1,4 +1,4 @@
-package com.image_loader.nikita.image_loader
+package com.imageLoader.nikita.imageLoader
 
 import android.content.Context
 import android.content.res.Configuration

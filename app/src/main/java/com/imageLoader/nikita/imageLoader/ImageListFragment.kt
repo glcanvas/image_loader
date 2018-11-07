@@ -1,4 +1,4 @@
-package com.image_loader.nikita.image_loader
+package com.imageLoader.nikita.imageLoader
 
 
 import android.os.Bundle
@@ -9,10 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.image_loader.nikita.image_loader.utils.AsyncLoadList
-import com.image_loader.nikita.image_loader.utils.AsyncLoadPreviewImage
-import com.image_loader.nikita.image_loader.utils.ImageListViewAdapter
-import com.image_loader.nikita.image_loader.utils.ShortImageModel
+import com.imageLoader.nikita.imageLoader.utils.AsyncLoadList
+import com.imageLoader.nikita.imageLoader.utils.AsyncLoadPreviewImage
+import com.imageLoader.nikita.imageLoader.utils.ImageListViewAdapter
+import com.imageLoader.nikita.imageLoader.utils.ShortImageModel
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
 

@@ -1,12 +1,10 @@
-package com.image_loader.nikita.image_loader.utils
+package com.imageLoader.nikita.imageLoader.utils
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.image_loader.nikita.image_loader.R
+import com.imageLoader.nikita.imageLoader.R
 
 
 open class ImageListViewAdapter(

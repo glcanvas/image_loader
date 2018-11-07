@@ -1,4 +1,4 @@
-package com.image_loader.nikita.image_loader.services
+package com.imageLoader.nikita.imageLoader.services
 
 import android.app.IntentService
 import android.content.Context
@@ -6,7 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
-import com.image_loader.nikita.image_loader.DetailFragment
+import com.imageLoader.nikita.imageLoader.DetailFragment
 import java.io.*
 import java.net.URL
 

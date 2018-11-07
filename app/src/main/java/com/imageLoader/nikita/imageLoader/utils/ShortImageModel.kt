@@ -1,10 +1,8 @@
-package com.image_loader.nikita.image_loader.utils
+package com.imageLoader.nikita.imageLoader.utils
 
 import android.graphics.Bitmap
 import android.os.Parcel
 import android.os.Parcelable
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
 
 data class ShortImageModel(
     var authorName: String,

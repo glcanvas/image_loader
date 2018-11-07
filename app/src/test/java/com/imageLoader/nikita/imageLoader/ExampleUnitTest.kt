@@ -1,4 +1,4 @@
-package com.image_loader.nikita.image_loader
+package com.imageLoader.nikita.imageLoader
 
 import org.junit.Test
 

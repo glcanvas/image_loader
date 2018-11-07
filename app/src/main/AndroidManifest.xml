@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.image_loader.nikita.image_loader">
+          xmlns:tools="http://schemas.android.com/tools" package="com.imageLoader.nikita.imageLoader">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -12,8 +12,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning">
-        <service android:name=".services.BackgroundImageLoad"/>
-        <activity android:name=".MainActivity">
+        <service android:name="com.imageLoader.nikita.imageLoader.services.BackgroundImageLoad"/>
+        <activity android:name="com.imageLoader.nikita.imageLoader.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

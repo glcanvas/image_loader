@@ -1,11 +1,11 @@
-package com.image_loader.nikita.image_loader.utils
+package com.imageLoader.nikita.imageLoader.utils
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import com.image_loader.nikita.image_loader.R
+import com.imageLoader.nikita.imageLoader.R
 
 class ImageListViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
     var author_name = view.findViewById<TextView>(R.id.holder_author_name)

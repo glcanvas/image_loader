@@ -1,4 +1,4 @@
-package com.image_loader.nikita.image_loader.utils
+package com.imageLoader.nikita.imageLoader.utils
 
 import android.os.AsyncTask
 import android.util.Log

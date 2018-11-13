@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,9 +45,11 @@ class ImageListFragment : Fragment() {
         metaImages.addAll(tmpArray)
         adapter.notifyDataSetChanged()
         metaImages.forEachIndexed { index, item ->
-            AsyncLoadPreviewImage(index, previewImageSet, item, adapter).execute(
-                item.previewLink
-            )
+            if (item.previewImage == null) {
+                AsyncLoadPreviewImage(index, previewImageSet, item, adapter).execute(item.previewLink)
+            } else {
+                Log.d("image_loader", "yet loaded")
+            }
         }
 
         button = view.findViewById(R.id.switch_frame)
@@ -93,7 +96,7 @@ class ImageListFragment : Fragment() {
                 description = x.description,
                 previewLink = x.previewLink,
                 fullLink = x.fullLink,
-                previewImage = null,
+                previewImage = x.previewImage,
                 fullImage = null
             )
         } as ArrayList<ShortImageModel>

@@ -1,6 +1,7 @@
 package com.imageLoader.nikita.imageLoader
 
 
+import android.content.BroadcastReceiver
 import android.os.Bundle
 import android.support.v4.app.Fragment
 
@@ -10,10 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.imageLoader.nikita.imageLoader.utils.AsyncLoadList
-import com.imageLoader.nikita.imageLoader.utils.AsyncLoadPreviewImage
-import com.imageLoader.nikita.imageLoader.utils.ImageListViewAdapter
-import com.imageLoader.nikita.imageLoader.utils.ShortImageModel
+import com.imageLoader.nikita.imageLoader.utils.*
+import java.lang.ref.WeakReference
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
 
@@ -21,8 +20,7 @@ class ImageListFragment : Fragment() {
     private val metaImages = ArrayList<ShortImageModel>()
 
     private val taskSet = HashSet<AsyncLoadList>()
-    private val previewImageSet = HashSet<AsyncLoadPreviewImage>()
-
+    private val backgroundLoadPreviewImage = HashSet<BroadcastReceiver>()
     private var screenSize: String? = null
     private var offset: Int = 1
     private lateinit var adapter: ImageListViewAdapter
@@ -45,18 +43,16 @@ class ImageListFragment : Fragment() {
         metaImages.addAll(tmpArray)
         adapter.notifyDataSetChanged()
         metaImages.forEachIndexed { index, item ->
-            if (item.previewImage == null) {
-                AsyncLoadPreviewImage(index, previewImageSet, item, adapter).execute(item.previewLink)
-            } else {
-                Log.d("image_loader", "yet loaded")
-            }
+            CommonData.handlerLoadPreview(adapter, item, index, WeakReference(context), backgroundLoadPreviewImage)
         }
 
         button = view.findViewById(R.id.switch_frame)
         button.setOnClickListener {
-            val async = AsyncLoadList(offset, adapter, metaImages, taskSet, previewImageSet)
+            val async =
+                AsyncLoadList(offset, adapter, metaImages, taskSet, backgroundLoadPreviewImage, WeakReference(context))
             async.execute("https://api.unsplash.com/photos/?client_id=73e14423b06e6a0f7715e4ea90b0c9b8f3e94fa21d6281ed2b730da4cb79d016")
             offset++
+
         }
 
         recyclerView.addOnItemClickListener(object : OnItemClickListener {
@@ -81,11 +77,12 @@ class ImageListFragment : Fragment() {
         for (i in taskSet) {
             i.cancel(true)
         }
-        for (i in previewImageSet) {
-            i.cancel(true)
-        }
+
         taskSet.clear()
-        previewImageSet.clear()
+        for (i in backgroundLoadPreviewImage) {
+            context?.unregisterReceiver(i)
+        }
+        backgroundLoadPreviewImage.clear()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -96,8 +93,7 @@ class ImageListFragment : Fragment() {
                 description = x.description,
                 previewLink = x.previewLink,
                 fullLink = x.fullLink,
-                previewImage = x.previewImage,
-                fullImage = null
+                previewImage = null
             )
         } as ArrayList<ShortImageModel>
         outState.putParcelableArrayList("list_images", tmp)

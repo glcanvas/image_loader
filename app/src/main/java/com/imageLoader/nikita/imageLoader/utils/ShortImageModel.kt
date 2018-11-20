@@ -9,7 +9,6 @@ data class ShortImageModel(
     var description: String,
     var fullLink: String,
     var previewLink: String,
-    var fullImage: Bitmap?,
     var previewImage: Bitmap?
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
@@ -17,7 +16,6 @@ data class ShortImageModel(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
-        null,
         null
     )
 
@@ -26,7 +24,6 @@ data class ShortImageModel(
         parcel.writeString(description)
         parcel.writeString(fullLink)
         parcel.writeString(previewLink)
-        parcel.writeValue(null)
         parcel.writeValue(null)
     }
 

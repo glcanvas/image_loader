@@ -1,10 +1,8 @@
 package com.imageLoader.nikita.imageLoader
 
 import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -13,13 +11,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import com.imageLoader.nikita.imageLoader.services.BackgroundImageLoad
+import com.imageLoader.nikita.imageLoader.utils.CommonData
+import com.imageLoader.nikita.imageLoader.utils.DetailHandler
 
 class DetailFragment : Fragment() {
-    companion object {
-        val PROCESS_RESPONSE = "com.image_loader.nikita.image_loader.PROCESS_RESPONSE"
-        val PARAM_STATUS = "status"
-        val PARAM_RESULT = "result"
-    }
 
     private lateinit var broadcastReceiver: BroadcastReceiver
     lateinit var imageHolder: ImageView
@@ -32,20 +27,8 @@ class DetailFragment : Fragment() {
         progressBar = view.findViewById(R.id.full_image_load_bar)
         val bundle = this.arguments
 
-        broadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                val status = intent?.getStringExtra(PARAM_STATUS)
-                if (status == "ok") {
-                    val image = intent.getParcelableExtra<Bitmap>(PARAM_RESULT)
-                    progressBar.visibility = View.GONE
-                    imageHolder.setImageBitmap(image)
-                } else {
-                    progressBar.visibility = View.GONE
-                }
-            }
-        }
-
-        val filter = IntentFilter(PROCESS_RESPONSE)
+        broadcastReceiver = DetailHandler(progressBar, imageHolder).detailReceiver
+        val filter = IntentFilter(CommonData.PROCESS_RESPONSE_DETAIL)
         filter.addCategory(Intent.CATEGORY_DEFAULT)
         context?.registerReceiver(broadcastReceiver, filter)
 
@@ -58,6 +41,7 @@ class DetailFragment : Fragment() {
         }
         return view
     }
+
     override fun onDestroy() {
         context?.unregisterReceiver(broadcastReceiver)
         super.onDestroy()

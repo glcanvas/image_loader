@@ -1,14 +1,20 @@
 package com.imageLoader.nikita.imageLoader.utils
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.AsyncTask
 import android.util.Log
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.imageLoader.nikita.imageLoader.services.BackgroundPreviewImageLoad
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.lang.StringBuilder
+import java.lang.ref.WeakReference
 import java.net.URL
 
 class AsyncLoadList(
@@ -16,7 +22,8 @@ class AsyncLoadList(
     private val adapter: ImageListViewAdapter,
     private val list: ArrayList<ShortImageModel>,
     private val set: HashSet<AsyncLoadList>,
-    private val imageSet: HashSet<AsyncLoadPreviewImage>
+    private val imageBackgroundSet: HashSet<BroadcastReceiver>,
+    private val context: WeakReference<Context?>
 ) :
     AsyncTask<String, Unit, ArrayList<ShortImageModel>>() {
     var tmpOffset: Int = 0
@@ -35,7 +42,8 @@ class AsyncLoadList(
         list.addAll(result ?: emptyList())
         adapter.notifyDataSetChanged()
         result?.forEachIndexed { index, element ->
-            AsyncLoadPreviewImage(listOffset + index, imageSet, element, adapter).execute(element.previewLink)
+            val offset = listOffset + index
+            CommonData.handlerLoadPreview(adapter, element, offset, context, imageBackgroundSet)
         }
     }
 
@@ -97,7 +105,6 @@ class AsyncLoadList(
             description = description,
             fullLink = fullLink,
             previewLink = previewLink,
-            fullImage = null,
             previewImage = null
         )
 

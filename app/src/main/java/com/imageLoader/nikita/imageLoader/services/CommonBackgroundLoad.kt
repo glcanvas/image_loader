@@ -28,11 +28,11 @@ abstract class CommonBackgroundLoad : IntentService("PreviewImageLoad") {
         } catch (e: IOException) {
             broadcastIntent.putExtra(CommonData.PARAM_STATUS, "fail")
             sendBroadcast(broadcastIntent)
-            Log.e("image_loader", e.toString())
+            Log.e("image_loader", "fail")
         } catch (e: IllegalArgumentException) {
             broadcastIntent.putExtra(CommonData.PARAM_STATUS, "fail")
             sendBroadcast(broadcastIntent)
-            Log.e("image_loader", e.toString())
+            Log.e("image_loader", "fail")
         }
     }
 
@@ -47,7 +47,7 @@ abstract class CommonBackgroundLoad : IntentService("PreviewImageLoad") {
         } catch (e: IOException) {
             broadcastIntent.putExtra(CommonData.PARAM_STATUS, "fail")
             sendBroadcast(broadcastIntent)
-            Log.e("image_loader", e.toString())
+            Log.e("image_loader", "fail")
         }
     }
 
